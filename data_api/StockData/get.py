@@ -15,7 +15,7 @@ class StockData(object):
     def __init__(self):
         """Return a Customer object whose name is *name* and starting
         balance is *balance*."""
-        self.postgre_sql = ''
+        self.postgre_sql = postgreSQL.PostgreSQL()
         self.morning_star = MorningStar.MorningStar()
 
     def get_historical_stock_price(self, symbol, start, end):
@@ -24,9 +24,8 @@ class StockData(object):
         :param symbol:
         :param start:
         :param end:
-        :return:
+        :return: list of dicts
         """
-
         return self.morning_star.retrieve_stock_price(symbol, start, end)
 
     def getStockPrice(self, amount):
@@ -35,11 +34,13 @@ class StockData(object):
         self.balance += amount
         return self.balance
 
-    def updateStockPrice(self, amount):
-        """Return the balance remaining after depositing *amount*
-        dollars."""
-        self.balance += amount
-        return self.balance
+    def store_stock_price(self, stock_data):
+        """
+
+        :param stock_data: (list of dicts)
+        :return:
+        """
+        self.postgre_sql.store_stock_price(stock_data)
 
 
 def main():
@@ -49,11 +50,11 @@ def main():
 
     # Check for "get_historical_stock_price"
     company_symbol = 'LNKD'
-    start_date = '2016-08-01'
+    start_date = '2000-08-01'
     end_date = '2016-08-13'
 
-    print stock_data.get_historical_stock_price(symbol=company_symbol, start=start_date, end=end_date)
-
+    symbol_data = stock_data.get_historical_stock_price(symbol=company_symbol, start=start_date, end=end_date)
+    stock_data.store_stock_price(symbol_data)
 
 if __name__ == "__main__":
     main()

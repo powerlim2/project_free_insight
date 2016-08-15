@@ -18,7 +18,7 @@ class MorningStar(provider.Provider):
     api_path = 'http://globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?'
 
     def __init__(self):
-        super(provider.Provider, self).__init__()
+        super(self.__class__, self).__init__()
 
     def retrieve_stock_price(self, symbol, start, end):
         """
@@ -29,7 +29,7 @@ class MorningStar(provider.Provider):
         :param end: "yyyy-mm-dd" format
         :return: dict type
         """
-        symbol = str(symbol)
+        symbol = str(symbol).upper()
         argument_line = 'ticker={0}' \
                         '&showVol=true&dtype=his&f=d&curry=USD&' \
                         'range={1}|{2}' \
@@ -43,18 +43,21 @@ class MorningStar(provider.Provider):
         res = dict(requested.json())
         price_data = res['PriceDataList'][0]
         volume_data = res['VolumeList']
-
-        output = {'date':[], 'close_price':[], 'open_price':[], 'day_range_low':[], 'day_range_high':[], 'trading_volume':[]}
-
         total_days = len(price_data['DateIndexs'])
-        for i in xrange(total_days):
-            output['date'].append(self.convert_date_index(price_data['DateIndexs'][i]))
-            output['close_price'].append(price_data['Datapoints'][i][0])
-            output['open_price'].append(price_data['Datapoints'][i][1])
-            output['day_range_low'].append(price_data['Datapoints'][i][2])
-            output['day_range_high'].append(price_data['Datapoints'][i][3])
-            output['trading_volume'].append(long(volume_data['Datapoints'][i] * 1000000))
 
+        output = []
+        for i in xrange(total_days):
+            output.append({
+                'SYMBOL': symbol,
+                'TRADE_DATE': self.convert_date_index(price_data['DateIndexs'][i]),
+                'CLOSE_PRICE': price_data['Datapoints'][i][0],
+                'OPEN_PRICE': price_data['Datapoints'][i][1],
+                'DAILY_LOW': price_data['Datapoints'][i][2],
+                'DAILY_HIGH': price_data['Datapoints'][i][3],
+                'TRADE_VOLUME': long(volume_data['Datapoints'][i] * 1000000)
+            })
+
+        print "Successfully retrieved {0} records from MorningStar.\n".format(total_days)
         return output
 
     def convert_date_index(self, excel_date_index):
