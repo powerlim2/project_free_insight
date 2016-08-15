@@ -17,13 +17,12 @@ class PostgreSQL(database.DB):
         store_stock_price:
 
     """
-    api_path = 'put_specific_RestAPI_path_here'
     postgre_DB = postgre_user = postgre_password = 'insight'
 
     def __init__(self):
         super(self.__class__, self).__init__()
         try:
-            argument = "dbname='{0}' user='{1}' password='{2}'".format(self.postgre_DB, self.postgre_user, self.postgre_password)
+            argument = "dbname='{0}' user='{1}' password='{2}' host=/tmp/".format(self.postgre_DB, self.postgre_user, self.postgre_password)
             self.connection = psycopg2.connect(argument)
         except:
             raise Exception("Connection Error: unable to connect to postgreSQL DB")

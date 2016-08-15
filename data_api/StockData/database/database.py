@@ -17,8 +17,6 @@ class DB(object):
     """
     __metaclass__ = ABCMeta
 
-    api_path = 'put_specific_RestAPI_path_here'
-
     def __init__(self):
         """
         initiate the provider class
