@@ -1,3 +1,9 @@
+
+CREATE "NameUser" insight createDB WITH PASSWORD 'insight';
+
+CREATE USER insight WITH PASSWORD 'insight';
+
+
 /**
  * pSQL way of "USE insight": change default DB to "insight"
  */
