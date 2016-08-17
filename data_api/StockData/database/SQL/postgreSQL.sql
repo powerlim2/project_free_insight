@@ -1,5 +1,5 @@
 
-CREATE "NameUser" insight createDB WITH PASSWORD 'insight';
+CREATE "insight" createDB WITH PASSWORD 'insight';
 
 CREATE USER insight WITH PASSWORD 'insight';
 
