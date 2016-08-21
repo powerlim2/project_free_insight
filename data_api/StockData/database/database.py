@@ -29,4 +29,4 @@ class DB(object):
 
         :param stock_data: store stock price, trading volume, dividend data by date
         """
-        pass
+        raise Exception('MethodNotImplementedError: ' + self.store_stock_price.__name__)

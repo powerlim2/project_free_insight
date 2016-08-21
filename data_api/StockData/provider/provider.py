@@ -34,4 +34,4 @@ class Provider(object):
         :param end:
         :return:
         """
-        pass
+        raise Exception('MethodNotImplementedError: ' + self.retrieve_stock_price.__name__)
