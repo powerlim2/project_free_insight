@@ -57,7 +57,7 @@ class MorningStar(provider.Provider):
                 'TRADE_VOLUME': long(volume_data['Datapoints'][i] * 1000000)
             })
 
-        print "Successfully retrieved {0} records from MorningStar.\n".format(total_days)
+        print "Successfully retrieved {0} records from MorningStar.".format(total_days)
         return output
 
     def convert_date_index(self, excel_date_index):

@@ -18,6 +18,15 @@ class StockData(object):
         self.postgre_sql = postgreSQL.PostgreSQL()
         self.morning_star = MorningStar.MorningStar()
 
+    def get_symbols(self, exchange):
+        """
+        Return a list of all stock symbols traded in a target stock exchange
+
+        :param exchange:
+        :return: list
+        """
+        return self.postgre_sql.get_symbols(exchange)
+
     def get_historical_stock_price(self, symbol, start, end):
         """
 
@@ -28,12 +37,6 @@ class StockData(object):
         """
         return self.morning_star.retrieve_stock_price(symbol, start, end)
 
-    def getStockPrice(self, amount):
-        """Return the balance remaining after depositing *amount*
-        dollars."""
-        self.balance += amount
-        return self.balance
-
     def store_stock_price(self, stock_data):
         """
 
@@ -42,19 +45,3 @@ class StockData(object):
         """
         self.postgre_sql.store_stock_price(stock_data)
 
-
-def main():
-    print 'Test: Stock Data Retrieving\n'
-
-    stock_data = StockData()
-
-    # Check for "get_historical_stock_price"
-    company_symbol = 'LNKD'
-    start_date = '2000-08-01'
-    end_date = '2016-08-13'
-
-    symbol_data = stock_data.get_historical_stock_price(symbol=company_symbol, start=start_date, end=end_date)
-    stock_data.store_stock_price(symbol_data)
-
-if __name__ == "__main__":
-    main()

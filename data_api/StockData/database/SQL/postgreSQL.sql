@@ -30,7 +30,7 @@ GRANT ALL PRIVILEGES ON TABLE SYMBOL to insight;
  * Note: change the data path to fit your local path
  */
 COPY SYMBOL FROM
-'~/project_free_insights/data_api/StockData/data/Symbol.csv'
+'~/project_free_insight/data_api/StockData/data/Symbol.csv'
 delimiter ',' csv;
 
 
@@ -45,6 +45,7 @@ CREATE TABLE STOCK (
    DAILY_LOW DOUBLE PRECISION,
    DAILY_HIGH DOUBLE PRECISION,
    TRADE_VOLUME BIGINT,
+   LAST_UPDATE_DATE DATE NOT NULL,
    PRIMARY KEY(SYMBOL, TRADE_DATE)
 );
 

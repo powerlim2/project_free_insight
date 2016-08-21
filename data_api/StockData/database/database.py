@@ -23,6 +23,15 @@ class DB(object):
         """
 
     @abstractmethod
+    def get_symbols(self, exchange):
+        """
+        retrieve stock symbols
+
+        :param exchange: Symbol of Stock Exchange
+        """
+        raise Exception('MethodNotImplementedError: ' + self.get_symbols.__name__)
+
+    @abstractmethod
     def store_stock_price(self, stock_data):
         """
         retrieve stock price, volume, date, dividend data
