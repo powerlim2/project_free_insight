@@ -9,8 +9,9 @@ Author: Joonhyung Lim <powerlim2@gmail.com>
 """
 
 target_exchanges = ['NYQ', 'NMS']
-stock_start_date = '1900-01-01'
-stock_end_date = datetime.datetime.now().strftime('%Y-%m-%d')
+end_date = datetime.datetime.now()
+stock_end_date = end_date.strftime('%Y-%m-%d')
+stock_start_date = (end_date - datetime.timedelta(days=14)).strftime('%Y-%m-%d')
 
 
 def run_stock_data():
