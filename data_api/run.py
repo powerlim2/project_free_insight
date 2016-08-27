@@ -4,7 +4,7 @@ import time
 from StockData.StockData import StockData
 
 """
-Title: Data API
+Title: Data Scraping API
 Author: Joonhyung Lim <powerlim2@gmail.com>
 """
 
