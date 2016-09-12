@@ -44,4 +44,5 @@ class StockData(object):
         :return:
         """
         self.postgre_sql.store_stock_price(stock_data)
+        return self
 

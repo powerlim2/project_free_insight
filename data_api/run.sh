@@ -20,6 +20,3 @@ rm /tmp/stock_retrieval.txt
 
 # we are done, clean-up after ourselves
 rm $TEMP_FILE
-
-
-mailx -v -A gmail -s "test" powerlim2@gmail.com,jkminz329@gmail.com

@@ -1,3 +1,6 @@
+from query.postgreSqlQuery import PostgreSqlQuery
+from schema import tableSchema
+
 import psycopg2
 import database
 import datetime
@@ -12,23 +15,29 @@ class PostgreSQL(database.DB):
 
     Static:
         db_path: db access path
+        temp_stock_table_name: the name of temporary stock table (internal use)
 
     Attributes:
-        balance: A float tracking the current balance of the customer's account.
+        stock_table_query: class to generate queries to work with STOCK table in postgreSQL DB.
 
 
     Methods:
         store_stock_price:
 
     """
-    postgre_DB = postgre_user = postgre_password = 'insight'
+    __postgre_DB = __postgre_user = __postgre_password = 'insight'
+    __temp_stock_table_name = 'TEMP_STOCK'
+    __stock_table_name = 'STOCK'
 
     def __init__(self):
         super(self.__class__, self).__init__()
+
+        self.stock_table_query = PostgreSqlQuery(tableSchema.STOCK_TABLE_SCHEMA)
         try:
-            argument = "dbname='{0}' user='{1}' password='{2}' host=localhost".format(self.postgre_DB, self.postgre_user, self.postgre_password)
+            argument = "dbname='{0}' user='{1}' password='{2}' host=localhost".format(self.__postgre_DB, self.__postgre_user, self.__postgre_password)
             self.connection = psycopg2.connect(argument)
-        except:
+        except Exception, errorStack:
+            print errorStack
             raise Exception("Connection Error: unable to connect to postgreSQL DB")
 
     def get_symbols(self, exchange):
@@ -61,53 +70,44 @@ class PostgreSQL(database.DB):
         self._create_temp_stock_table()
         self._insert_stock_data_into_temp_table(stock_data)
         self._update_and_insert_temp_data()
+        print """Successfully inserted {0} records into '{1}' table.""".format(len(stock_data), self.__stock_table_name)
+        return self
 
-        print """Successfully inserted {0} records into 'STOCK' table.""".format(len(stock_data))
-
-    def _create_temp_stock_table(self, table_name='TEMP_STOCK'):
-        create_query = """CREATE TABLE {0} (SYMBOL VARCHAR(20) NOT NULL, TRADE_DATE DATE NOT NULL, """ \
-                """CLOSE_PRICE DOUBLE PRECISION, OPEN_PRICE DOUBLE PRECISION, DAILY_LOW DOUBLE PRECISION, """ \
-                """DAILY_HIGH DOUBLE PRECISION, TRADE_VOLUME BIGINT, PRIMARY KEY(SYMBOL, TRADE_DATE));""".format(table_name)
-
+    def _create_temp_stock_table(self):
+        create_query = self.stock_table_query.get_create_table_statement(self.__temp_stock_table_name)
         cursor = self.connection.cursor()
         cursor.execute(create_query)
         self.connection.commit()
+        return self
 
-    def _insert_stock_data_into_temp_table(self, stock_data, table_name='TEMP_STOCK'):
-        import_query = """INSERT INTO {0}(SYMBOL, TRADE_DATE, CLOSE_PRICE, OPEN_PRICE, DAILY_LOW, DAILY_HIGH, TRADE_VOLUME) """ \
-                       """VALUES (%(SYMBOL)s, %(TRADE_DATE)s, %(CLOSE_PRICE)s, %(OPEN_PRICE)s, %(DAILY_LOW)s, %(DAILY_HIGH)s, %(TRADE_VOLUME)s);""".format(table_name)
-        locking_query = """LOCK TABLE {0} IN EXCLUSIVE MODE;""".format(table_name)
-
+    def _insert_stock_data_into_temp_table(self, stock_data):
+        insert_query = self.stock_table_query.get_insert_table_statement(self.__temp_stock_table_name)
         cursor = self.connection.cursor()
-        cursor.executemany(import_query, stock_data)
-        cursor.execute(locking_query)
+        cursor.executemany(insert_query, stock_data)
+        cursor.execute(self.stock_table_query.get_lock_table_statement(self.__temp_stock_table_name))
         self.connection.commit()
+        return self
 
     def _update_and_insert_temp_data(self):
-        update_query = """UPDATE STOCK SET SYMBOL = TEMP_STOCK.SYMBOL, TRADE_DATE = TEMP_STOCK.TRADE_DATE, CLOSE_PRICE = TEMP_STOCK.CLOSE_PRICE, """ \
-                       """OPEN_PRICE = TEMP_STOCK.OPEN_PRICE, DAILY_LOW = TEMP_STOCK.DAILY_LOW, DAILY_HIGH = TEMP_STOCK.DAILY_HIGH, TRADE_VOLUME = TEMP_STOCK.TRADE_VOLUME, """ \
-                       """LAST_UPDATE_DATE = '{0}' FROM TEMP_STOCK WHERE (STOCK.SYMBOL = TEMP_STOCK.SYMBOL) AND (STOCK.TRADE_DATE = TEMP_STOCK.TRADE_DATE);""".format(CURRENT_DATE)
-
-        # insert the new data
-        insert_query = """INSERT INTO STOCK SELECT TEMP_STOCK.SYMBOL, TEMP_STOCK.TRADE_DATE, TEMP_STOCK.CLOSE_PRICE, """ \
-                       """ TEMP_STOCK.OPEN_PRICE, TEMP_STOCK.DAILY_LOW, TEMP_STOCK.DAILY_HIGH, TEMP_STOCK.TRADE_VOLUME, '{0}' FROM TEMP_STOCK """ \
-                       """LEFT OUTER JOIN STOCK ON (STOCK.SYMBOL = TEMP_STOCK.SYMBOL) AND (STOCK.TRADE_DATE = TEMP_STOCK.TRADE_DATE) """ \
-                       """WHERE STOCK.SYMBOL IS NULL;""".format(CURRENT_DATE)
-
+        upsert_query = self.stock_table_query.get_upsert_table_statement(self.__stock_table_name, self.__temp_stock_table_name, CURRENT_DATE)
         cursor = self.connection.cursor()
-        cursor.execute(update_query)
-        cursor.execute(insert_query)
+        cursor.execute(upsert_query['UPDATE'])
+        cursor.execute(upsert_query['INSERT'])
         self.connection.commit()
+        return self
 
-    def _delete_temp_stock_table(self, table_name='TEMP_STOCK'):
-        query = """DROP TABLE {0};""".format(table_name)
+    def _delete_temp_stock_table(self):
+        if not self.stock_table_query:
+            raise Exception('NullClassException: stock_table_query is null!')
 
+        query = self.stock_table_query.get_drop_table_statement(self.__temp_stock_table_name)
         try:
             cursor = self.connection.cursor()
             cursor.execute(query)
             self.connection.commit()
+            return self
+
         except Exception, error_stack:
             print str(error_stack)
             self.connection.rollback()
             pass
-

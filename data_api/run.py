@@ -33,7 +33,7 @@ def run_stock_data():
 
             except Exception, error_stack:
                 print """\n*** pass '{0}' due to an exception! ***""".format(sym)
-                print "*** detail: " + str(error_stack) + " ***\n"
+                print "*** detail: " + str(error_stack.message) + " ***\n"
                 unsuccessful_retrieval += 1
                 pass
 

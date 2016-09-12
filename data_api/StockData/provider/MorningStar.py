@@ -61,8 +61,9 @@ class MorningStar(provider.Provider):
         return output
 
     def convert_date_index(self, excel_date_index):
-        """Return the balance remaining after depositing *amount*
-        dollars."""
+        """
+        Return the balance remaining after depositing *amount* dollars.
+        """
         base = datetime.datetime(1900, 1, 1)
         delta = datetime.timedelta(days=excel_date_index)
         return (base+delta).strftime('%Y-%m-%d')
