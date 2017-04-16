@@ -53,19 +53,17 @@ def run_housing_data():
     # retrieve housing data from Redfin by region and save them into DB
     total_regions = len(target_regions)
     for num, region in enumerate(target_regions):
-        time.sleep(60)  # reduce the stress to Redfin API server
-
         try:
             print """Retrieving '{0}' from Redfin ({2}/{3}) """.format(region, num+1, total_regions)
             redfin_data = housing_data.retrieve_redfin_search_result_by_city(city=region)
             housing_data.store_redfin_data(redfin_data)
             successful_retrieval += 1
-
         except Exception, error_stack:
             print """\n*** pass '{0}' due to an exception! ***""".format(region)
             print "*** detail: " + str(error_stack.message) + " ***\n"
             unsuccessful_retrieval += 1
             pass
+        time.sleep(60)  # reduce the stress to Redfin API server
 
     print """\n\nTotal {0} regions retrieved successfully""".format(successful_retrieval)
 

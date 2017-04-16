@@ -30,7 +30,22 @@ region_param = {
 }
 
 # headers to mimic a browser visit
-request_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'}
+# fetch redfin_cookie
+with open('../key/Redfin_Cookie', 'r') as rck:
+     redfin_cookie = rck.read()
+
+request_headers = {
+    'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding' : 'gzip, deflate, sdch, br',
+    'Accept-Language' : 'en-US,en;q=0.8,id;q=0.6,ko;q=0.4',
+    'Cache-Control' : 'no-cache',
+    'Connection' : 'keep-alive',
+    'Host' : 'www.redfin.com',
+    'Cookie' : redfin_cookie,
+    'Pragma' : 'no-cache',
+    'Upgrade-Insecure-Requests' : '1',
+    'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
+}
 
 # redfin result columns
 result_columns = ['SALE_TYPE', 'SOLD_DATE', 'PROPERTY_TYPE', 'ADDRESS', 'CITY', 'STATE', 'ZIPCODE', 'PRICE', 'BEDS', 'BATHS', 'LOCATION', 'SQUARE FEET', 'LOT SIZE', 'YEAR BUILT', 'DAYS ON MARKET', 'DOLLAR_PER_SQFT', 'HOA_MONTHLY', 'STATUS', 'NEXT_OPEN_HOUSE_START_TIME', 'NEXT_OPEN_HOUSE_END_TIME' , 'URL', 'SOURCE', 'MLS_NUM', 'FAVORITE', 'INTERESTED', 'LATITUDE', 'LONGITUDE']
