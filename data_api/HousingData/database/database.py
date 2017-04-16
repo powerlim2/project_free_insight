@@ -1,15 +1,12 @@
 from abc import ABCMeta, abstractmethod
 
 
-class DB(object):
+class HousingDB(object):
     """
-    Abstract Class for string Stock data into DB
+    Abstract Class for storing Housing data into DB
 
     Static:
         db_path: db access path
-
-    Attributes:
-        balance: A float tracking the current balance of the customer's account.
 
     Methods:
         store_stock_price:
@@ -23,19 +20,10 @@ class DB(object):
         """
 
     @abstractmethod
-    def get_symbols(self, exchange):
+    def store_redfin_data(self, housing_data):
         """
-        retrieve stock symbols
+        store the retrieved Redfin data into DB
 
-        :param exchange: Symbol of Stock Exchange
-        """
-        raise Exception('MethodNotImplementedError: ' + self.get_symbols.__name__)
-
-    @abstractmethod
-    def store_stock_price(self, stock_data):
-        """
-        retrieve stock price, volume, date, dividend data
-
-        :param stock_data: store stock price, trading volume, dividend data by date
+        :param housing_data: 
         """
         raise Exception('MethodNotImplementedError: ' + self.store_stock_price.__name__)
