@@ -21,6 +21,9 @@ region_param = {
     'campbell' : {
         'region_id' : '2673',
         'region_type' : '6'},
+    'santa clara' : {
+        'region_id' : '17675',
+        'region_type' : '6'},
     'west valley' : {
         'region_id' : '116902',
         'region_type' : '1'}

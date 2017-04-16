@@ -2,19 +2,21 @@ import datetime
 import time
 
 from StockData.StockData import StockData
-
+from HousingData.HousingData import HousingData
 """
 Title: Data Scraping API
 Author: Joonhyung Lim <powerlim2@gmail.com>
 """
 
-target_exchanges = ['NYQ', 'NMS']
-end_date = datetime.datetime.now()
-stock_end_date = end_date.strftime('%Y-%m-%d')
-stock_start_date = (end_date - datetime.timedelta(days=14)).strftime('%Y-%m-%d')
-
 
 def run_stock_data():
+    # parameters
+    target_exchanges = ['NYQ', 'NMS']
+    end_date = datetime.datetime.now()
+    stock_end_date = end_date.strftime('%Y-%m-%d')
+    stock_start_date = (end_date - datetime.timedelta(days=14)).strftime('%Y-%m-%d')
+
+    # workflow
     successful_retrieval = unsuccessful_retrieval = 0
     stock_data = StockData()
 
@@ -40,7 +42,36 @@ def run_stock_data():
     print """\n\nTotal {0} stock symbols retrieved successfully""".format(successful_retrieval)
 
 
+def run_housing_data():
+    # parameters
+    target_regions = ['campbell', 'santa clara', 'west valley']
+
+    # workflow
+    successful_retrieval = unsuccessful_retrieval = 0
+    housing_data = HousingData()
+
+    # retrieve housing data from Redfin by region and save them into DB
+    total_regions = len(target_regions)
+    for num, region in enumerate(target_regions):
+        time.sleep(60)  # reduce the stress to Redfin API server
+
+        try:
+            print """Retrieving '{0}' from Redfin ({2}/{3}) """.format(region, num+1, total_regions)
+            redfin_data = housing_data.retrieve_redfin_search_result_by_city(city=region)
+            housing_data.store_redfin_data(redfin_data)
+            successful_retrieval += 1
+
+        except Exception, error_stack:
+            print """\n*** pass '{0}' due to an exception! ***""".format(region)
+            print "*** detail: " + str(error_stack.message) + " ***\n"
+            unsuccessful_retrieval += 1
+            pass
+
+    print """\n\nTotal {0} regions retrieved successfully""".format(successful_retrieval)
+
+
 def main():
+    run_housing_data()
     run_stock_data()
 
 
