@@ -1,6 +1,8 @@
 import requests
 import provider
 
+from cookie import redfin_cookie 
+
 
 # redfin search options 
 base_param = {
@@ -30,10 +32,6 @@ region_param = {
 }
 
 # headers to mimic a browser visit
-# fetch redfin_cookie
-with open('../key/Redfin_Cookie', 'r') as rck:
-     redfin_cookie = rck.read()
-
 request_headers = {
     'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Encoding' : 'gzip, deflate, sdch, br',
@@ -41,7 +39,7 @@ request_headers = {
     'Cache-Control' : 'no-cache',
     'Connection' : 'keep-alive',
     'Host' : 'www.redfin.com',
-    'Cookie' : redfin_cookie,
+    'Cookie' : redfin_cookie.latest_cookie,
     'Pragma' : 'no-cache',
     'Upgrade-Insecure-Requests' : '1',
     'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
