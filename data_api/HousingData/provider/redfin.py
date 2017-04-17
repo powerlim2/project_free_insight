@@ -98,7 +98,7 @@ class Redfin(provider.Provider):
         for line_item in requested.iter_lines():
             items = line_item.split(',')
             # null join key handling (invalid record)
-            if any(join_key == '' for join_key in items[3:7]): pass
+            if any(join_key in {'', ' ', None} for join_key in items[3:7]): pass
             # make sure the data is complete
             if len(items) == len(result_columns):
                 row_result = {}
