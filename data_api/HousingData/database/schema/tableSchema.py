@@ -1,7 +1,7 @@
 REDFIN_TABLE_SCHEMA = {
     'SCHEMA': {
         'SALE_TYPE': 'VARCHAR(50)',
-        'SOLD_DATE': 'DATE',
+        'SOLD_DATE': 'VARCHAR(50)',
         'PROPERTY_TYPE': 'VARCHAR(50)',
         'ADDRESS': 'VARCHAR(100) NOT NULL',
         'CITY': 'VARCHAR(50) NOT NULL',
@@ -9,7 +9,7 @@ REDFIN_TABLE_SCHEMA = {
         'ZIPCODE': 'BIGINT',
         'PRICE': 'BIGINT',
         'BEDS': 'BIGINT',
-        'BATHS': 'BIGINT',
+        'BATHS': 'DOUBLE PRECISION',
         'SQFT': 'BIGINT',
         'LOT_SIZE': 'BIGINT',
         'YEAR_BUILT': 'BIGINT',
