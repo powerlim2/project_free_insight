@@ -53,8 +53,8 @@ def run_housing_data():
     # retrieve housing data from Redfin by region and save them into DB
     total_regions = len(target_regions)
     for num, region in enumerate(target_regions):
+        print """Retrieving '{0}' from Redfin ({2}/{3}) """.format(region, num+1, total_regions)
         try:
-            print """Retrieving '{0}' from Redfin ({2}/{3}) """.format(region, num+1, total_regions)
             redfin_data = housing_data.retrieve_redfin_search_result_by_city(city=region)
             housing_data.store_redfin_data(redfin_data)
             successful_retrieval += 1
