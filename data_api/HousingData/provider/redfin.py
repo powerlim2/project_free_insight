@@ -101,6 +101,8 @@ class Redfin(provider.Provider):
                 row_result = {}
                 for i in xrange(len(items)):
                     if result_columns[i] in target_columns:
+                        if items[i] in {'', ' '}:
+                            row_result[result_columns[i]] = None
                         row_result[result_columns[i]] = items[i]
                 if line_count != 0:  # skip the header row
                     output.append(row_result)
