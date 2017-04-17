@@ -1,7 +1,7 @@
 REDFIN_TABLE_SCHEMA = {
     'SCHEMA': {
         'SALE_TYPE': 'VARCHAR(50)',
-        'SOLD_DATE': 'VARCHAR(50)',
+        'SOLD_DATE': 'DATE',
         'PROPERTY_TYPE': 'VARCHAR(50)',
         'ADDRESS': 'VARCHAR(100) NOT NULL',
         'CITY': 'VARCHAR(50) NOT NULL',
